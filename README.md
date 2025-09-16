@@ -7,12 +7,12 @@ A sophisticated financial analytics dashboard that leverages **Monte Carlo simul
 
 ### Key Features
 
-- ** 10,000 Monte Carlo Simulations** - Geometric Brownian Motion with stochastic volatility
-- ** GARCH(1,1) Volatility Modeling** - Captures volatility clustering and mean reversion
-- ** Event-Driven Analysis** - Special handling for earnings announcements with 73% accuracy
-- ** 100k+ Historical Data Points** - 5 years of S&P 500 data with SQLite storage
-- ** Advanced Risk Metrics** - VaR, CVaR, Sharpe Ratio, probability distributions
-- ** Interactive Visualizations** - Real-time Plotly Dash interface with dark theme
+- **10,000 Monte Carlo Simulations** - Geometric Brownian Motion with stochastic volatility
+- **GARCH(1,1) Volatility Modeling** - Captures volatility clustering and mean reversion
+- **Event-Driven Analysis** - Special handling for earnings announcements with 73% accuracy
+- **100k+ Historical Data Points** - 5 years of S&P 500 data with SQLite storage
+- **Advanced Risk Metrics** - VaR, CVaR, Sharpe Ratio, probability distributions
+- **Interactive Visualizations** - Real-time Plotly Dash interface with dark theme
 
 
 ##  Quick Start
