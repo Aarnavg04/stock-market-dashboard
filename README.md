@@ -1,20 +1,20 @@
-# 📈 Stock Market Analytics Dashboard
+# Stock Market Analytics Dashboard
 
 
-## 🎯 Overview
+## Overview
 
 A sophisticated financial analytics dashboard that leverages **Monte Carlo simulations** with **GARCH(1,1) volatility modeling** to forecast stock price distributions, particularly around earnings announcements. The platform processes 5 years of S&P 500 historical data and provides comprehensive risk analytics with interactive visualizations.
 
-### ✨ Key Features
+### Key Features
 
-- **🎲 10,000 Monte Carlo Simulations** - Geometric Brownian Motion with stochastic volatility
-- **📊 GARCH(1,1) Volatility Modeling** - Captures volatility clustering and mean reversion
-- **📅 Event-Driven Analysis** - Special handling for earnings announcements with 73% accuracy
-- **💾 100k+ Historical Data Points** - 5 years of S&P 500 data with SQLite storage
-- **📈 Advanced Risk Metrics** - VaR, CVaR, Sharpe Ratio, probability distributions
-- **🎨 Interactive Visualizations** - Real-time Plotly Dash interface with dark theme
+- ** 10,000 Monte Carlo Simulations** - Geometric Brownian Motion with stochastic volatility
+- ** GARCH(1,1) Volatility Modeling** - Captures volatility clustering and mean reversion
+- ** Event-Driven Analysis** - Special handling for earnings announcements with 73% accuracy
+- ** 100k+ Historical Data Points** - 5 years of S&P 500 data with SQLite storage
+- ** Advanced Risk Metrics** - VaR, CVaR, Sharpe Ratio, probability distributions
+- ** Interactive Visualizations** - Real-time Plotly Dash interface with dark theme
 
-## 🖼️ Screenshots
+## Screenshots
 
 ### Main Dashboard
 ![Dashboard Overview](screenshots/dashboard.png)
@@ -24,7 +24,7 @@ A sophisticated financial analytics dashboard that leverages **Monte Carlo simul
 ![Risk Metrics](screenshots/risk_metrics.png)
 *Comprehensive risk metrics including VaR and CVaR calculations*
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -226,23 +226,17 @@ Contributions are welcome! Please follow these steps:
 - [ ] Multi-asset correlation analysis
 - [ ] Backtesting framework expansion
 
-## 📜 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - **Yahoo Finance** for historical data
 - **Plotly Dash** for visualization framework
 - **ARCH** library for GARCH modeling
 - **NumPy/Pandas** for numerical computing
 
-## 📧 Contact
+##  Contact
 
-Your Name - [your.email@example.com](mailto:your.email@example.com)
-
-Project Link: [https://github.com/yourusername/stock-market-analytics-dashboard](https://github.com/yourusername/stock-market-analytics-dashboard)
-
----
-
-**⭐ If you find this project useful, please consider giving it a star!**
+Aarnav Gandhi - aarnavgandhi04@gmail.com
