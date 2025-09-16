@@ -55,7 +55,7 @@ python main.py
 6. **Open browser**
 Navigate to `http://localhost:8050`
 
-## 📊 Technical Architecture
+##  Technical Architecture
 
 ### Monte Carlo Simulation Engine
 ```python
@@ -88,7 +88,7 @@ Parameters:
 | **Sharpe Ratio** | Risk-adjusted return | (μ - rf) / σ |
 | **Probability of Profit** | Chance of positive return | P(return > 0) |
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```
 stock-market-analytics-dashboard/
@@ -115,7 +115,7 @@ stock-market-analytics-dashboard/
 └── README.md              # This file
 ```
 
-## 🔬 Performance Metrics
+##  Performance Metrics
 
 ### Simulation Performance
 - **10,000 paths**: ~3-5 seconds
@@ -127,7 +127,7 @@ stock-market-analytics-dashboard/
 - **Backtested on**: 100+ earnings events
 - **Validation period**: 2019-2024
 
-## 🛠️ Configuration
+##  Configuration
 
 ### Adjust Simulation Parameters
 
@@ -149,7 +149,7 @@ model = GARCHVolatilityModel(
 )
 ```
 
-## 📈 Usage Examples
+##  Usage Examples
 
 ### Basic Simulation
 ```python
@@ -176,7 +176,7 @@ print(f"VaR (95%): {metrics['var_95']:.2f}%")
 print(f"Expected Return: {metrics['expected_return']:.2f}%")
 ```
 
-## 🧪 Testing
+##  Testing
 
 Run the test suite:
 ```bash
@@ -198,7 +198,7 @@ python tests/benchmark.py
 | `/api/simulate` | POST | Run simulation (JSON) |
 | `/api/metrics` | GET | Get current metrics |
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please follow these steps:
 
@@ -208,7 +208,7 @@ Contributions are welcome! Please follow these steps:
 4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Open Pull Request
 
-## 📊 Future Enhancements
+##  Future Enhancements
 
 - [ ] Options pricing with Black-Scholes
 - [ ] Portfolio optimization
