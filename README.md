@@ -14,15 +14,6 @@ A sophisticated financial analytics dashboard that leverages **Monte Carlo simul
 - ** Advanced Risk Metrics** - VaR, CVaR, Sharpe Ratio, probability distributions
 - ** Interactive Visualizations** - Real-time Plotly Dash interface with dark theme
 
-## Screenshots
-
-### Main Dashboard
-![Dashboard Overview](screenshots/dashboard.png)
-*Monte Carlo simulation showing 10,000 price paths with confidence bands*
-
-### Risk Analytics
-![Risk Metrics](screenshots/risk_metrics.png)
-*Comprehensive risk metrics including VaR and CVaR calculations*
 
 ##  Quick Start
 
