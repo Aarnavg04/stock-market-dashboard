@@ -17,6 +17,7 @@ from src.data_fetcher import StockDataFetcher
 from src.monte_carlo import MonteCarloSimulator
 from src.risk_metrics import RiskAnalyzer
 from src.garch_model import GARCHVolatilityModel
+from src.backtest import EarningsVolatilityBacktest
 
 # Initialize components with enhanced settings
 data_fetcher = StockDataFetcher()
@@ -567,32 +568,43 @@ def update_metrics_panels(results):
     [Input('stock-dropdown', 'value')]
 )
 def update_bottom_panels(ticker):
-    # Backtest Accuracy Chart (using simulated historical accuracy data)
+    # Backtest Accuracy Chart -- now driven by a REAL backtest, not random data
     accuracy_fig = go.Figure()
-    
-    # Simulated accuracy data - in production, this would come from actual backtesting
-    dates = pd.date_range(end=datetime.now(), periods=30, freq='D')
-    accuracy = np.random.normal(73, 5, 30)  # 73% average accuracy as specified
-    
-    accuracy_fig.add_trace(go.Scatter(
-        x=dates,
-        y=accuracy,
-        mode='lines',
-        fill='tozeroy',
-        line=dict(color='cyan', width=2),
-        fillcolor='rgba(0,212,255,0.2)'
-    ))
 
-    # Add average line
-    accuracy_fig.add_hline(y=73, line_dash="dash", line_color="yellow",
-                           annotation_text="Avg: 73%")
-    
+    try:
+        prices_df = data_fetcher.get_prices_from_db(ticker)
+        earnings_dates = data_fetcher.fetch_earnings_dates(ticker)
+        if not prices_df.empty and earnings_dates:
+            bt = EarningsVolatilityBacktest(train_window=250, post_window=5, tol=1.5)
+            bt_result = bt.run(prices_df["close"], earnings_dates)
+            detail = bt_result["detail"]
+            real_accuracy = bt_result["accuracy_pct"]
+
+            if not detail.empty:
+                # Plot forecast vs realized vol per event
+                accuracy_fig.add_trace(go.Scatter(
+                    x=detail["earnings_date"].astype(str), y=detail["forecast_vol"],
+                    mode="lines+markers", name="Forecast Vol",
+                    line=dict(color="cyan", width=2)))
+                accuracy_fig.add_trace(go.Scatter(
+                    x=detail["earnings_date"].astype(str), y=detail["realized_vol"],
+                    mode="lines+markers", name="Realized Vol",
+                    line=dict(color="magenta", width=2)))
+                title = (f"Post-Earnings Vol: forecast vs realized "
+                         f"({real_accuracy:.0f}% in-band, n={bt_result['events_tested']})")
+            else:
+                title = "Backtest: not enough history for this ticker"
+        else:
+            title = "Backtest: load data + earnings first (run initialize_data.py)"
+    except Exception as e:
+        title = f"Backtest unavailable: {e}"
+
     accuracy_fig.update_layout(
-        title="Post-Earnings Volatility Prediction Accuracy",
-        xaxis_title="Date",
-        yaxis_title="Accuracy (%)",
+        title=title,
+        xaxis_title="Earnings Event",
+        yaxis_title="Annualized Vol (%)",
         template='plotly_dark',
-        showlegend=False,
+        showlegend=True,
         margin=dict(l=0, r=0, t=30, b=0)
     )
     
@@ -601,26 +613,28 @@ def update_bottom_panels(ticker):
         earnings_dates = data_fetcher.fetch_earnings_dates(ticker)
         if earnings_dates:
             event_display = html.Div([
-                html.P([html.I(className="fas fa-bell me-2"), 
-                       f"Next Earnings: {earnings_dates[0].strftime('%Y-%m-%d')}"],
+                html.P([html.I(className="fas fa-bell me-2"),
+                       f"Next Earnings: {pd.to_datetime(earnings_dates[-1]).strftime('%Y-%m-%d')}"],
                       className="mb-2", style={'color': 'yellow'}),
-                html.P("Historical Events:", className="mb-2"),
-                html.Ul([
-                    html.Li("Q3 2024: +5.2% move", style={'fontSize': '12px'}),
-                    html.Li("Q2 2024: -2.1% move", style={'fontSize': '12px'}),
-                    html.Li("Q1 2024: +8.3% move", style={'fontSize': '12px'})
-                ])
+                html.P(f"{len(earnings_dates)} earnings dates on record for {ticker}",
+                       className="mb-2", style={'fontSize': '12px'}),
             ])
         else:
             event_display = html.P("No upcoming earnings found", className="text-muted")
     except:
         event_display = html.P("Earnings data unavailable", className="text-muted")
     
-    # Pipeline Status
+    # Pipeline Status -- report the REAL row count from SQLite
+    try:
+        real_count = data_fetcher.get_record_count()
+        db_detail = f"{real_count:,} records"
+    except Exception:
+        db_detail = "not initialized"
+
     pipeline_status = html.Div([
-        create_status_indicator("Data Fetch", "success", "5 years loaded"),
+        create_status_indicator("Data Fetch", "success", "loaded from SQLite"),
         create_status_indicator("GARCH Model", "success", "Converged"),
-        create_status_indicator("Database", "success", "100k+ records"),
+        create_status_indicator("Database", "success", db_detail),
         create_status_indicator("Auto-Update", "warning", "Manual mode"),
         html.Hr(style={'borderColor': 'rgba(255,255,255,0.1)'}),
         html.Small(f"Last Update: {datetime.now().strftime('%Y-%m-%d %H:%M')}", 

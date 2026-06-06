@@ -46,20 +46,22 @@ class MonteCarloSimulator:
         last_variance = garch_model.get_conditional_volatility().iloc[-1]**2
         
         for i in range(self.n_simulations):
-            h_t = last_variance  # Initialize with last known variance
+            h_t = last_variance  # Initialize with last known (annualized) variance
             price_t = current_price
-            
+
             for t in range(days_ahead):
-                # Generate random shock
-                epsilon = np.random.normal(0, 1)
-                
-                # Update variance (GARCH process)
-                h_t = omega + alpha * (epsilon**2) * h_t + beta * h_t
-                
-                # Calculate daily return with drift and GARCH volatility
-                daily_vol = np.sqrt(h_t / 252)  # Convert to daily
-                daily_return = mu/252 + daily_vol * epsilon
-                
+                # Generate standard-normal shock
+                z = np.random.normal(0, 1)
+
+                # Residual in variance units, then correct GARCH(1,1) recursion:
+                # h_t = omega + alpha * eps_{t-1}^2 + beta * h_{t-1}
+                eps = z * np.sqrt(h_t)
+                h_t = omega + alpha * (eps ** 2) + beta * h_t
+
+                # Daily return with drift and GARCH volatility
+                daily_vol = np.sqrt(h_t / 252)  # annual variance -> daily vol
+                daily_return = mu / 252 + daily_vol * z
+
                 # Update price
                 price_t = price_t * np.exp(daily_return)
                 paths[i, t] = price_t

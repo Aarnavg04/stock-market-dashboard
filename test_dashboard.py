@@ -106,6 +106,31 @@ def test_database():
         print(f"❌ Database error: {e}")
         return False
 
+def test_backtest():
+    """Test EarningsVolatilityBacktest produces valid results on synthetic data"""
+    try:
+        import numpy as np
+        import pandas as pd
+        from src.backtest import EarningsVolatilityBacktest
+
+        rng = np.random.default_rng(42)
+        dates = pd.date_range("2015-01-01", periods=500, freq="B")
+        prices = pd.Series(100 * np.exp(np.cumsum(rng.normal(0, 0.01, 500))), index=dates)
+
+        earnings_dates = [dates[260], dates[380]]
+        bt = EarningsVolatilityBacktest(train_window=250, post_window=5, tol=1.5)
+        result = bt.run(prices, earnings_dates)
+
+        assert "events_tested" in result and "accuracy_pct" in result, "Missing keys"
+        assert result["events_tested"] > 0, "No events tested"
+        assert 0.0 <= result["accuracy_pct"] <= 100.0, "Accuracy out of range"
+        print(f"✅ Backtest test passed: {result['events_tested']} events, {result['accuracy_pct']}% accuracy")
+        return True
+    except Exception as e:
+        print(f"❌ Backtest test error: {e}")
+        return False
+
+
 if __name__ == "__main__":
     print("\n" + "="*50)
     print("DASHBOARD COMPONENT TEST")
@@ -118,6 +143,7 @@ if __name__ == "__main__":
     all_pass &= test_data_fetch()
     all_pass &= test_simulation()
     all_pass &= test_database()
+    all_pass &= test_backtest()
     
     print("\n" + "="*50)
     if all_pass:
