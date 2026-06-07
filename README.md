@@ -1,11 +1,11 @@
-# 📈 Stock Market Analytics Dashboard
+# Stock Market Analytics Dashboard
 
 
-## 🎯 Overview
+## Overview
 
 A sophisticated financial analytics dashboard that leverages **Monte Carlo simulations** with **GARCH(1,1) volatility modeling** to forecast stock price distributions, particularly around earnings announcements. The platform processes 5 years of S&P 500 historical data and provides comprehensive risk analytics with interactive visualizations.
 
-### ✨ Key Features
+### Key Features
 
 - **🎲 10,000 Monte Carlo Simulations** - Geometric Brownian Motion with stochastic volatility
 - **📊 GARCH(1,1) Volatility Modeling** - Captures volatility clustering and mean reversion
@@ -14,17 +14,8 @@ A sophisticated financial analytics dashboard that leverages **Monte Carlo simul
 - **📈 Advanced Risk Metrics** - VaR, CVaR, Sharpe Ratio, probability distributions
 - **🎨 Interactive Visualizations** - Real-time Plotly Dash interface with dark theme
 
-## 🖼️ Screenshots
 
-### Main Dashboard
-![Dashboard Overview](screenshots/dashboard.png)
-*Monte Carlo simulation showing 10,000 price paths with confidence bands*
-
-### Risk Analytics
-![Risk Metrics](screenshots/risk_metrics.png)
-*Comprehensive risk metrics including VaR and CVaR calculations*
-
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -64,7 +55,7 @@ python main.py
 6. **Open browser**
 Navigate to `http://localhost:8050`
 
-## 📊 Technical Architecture
+##  Technical Architecture
 
 ### Monte Carlo Simulation Engine
 ```python
@@ -97,7 +88,7 @@ Parameters:
 | **Sharpe Ratio** | Risk-adjusted return | (μ - rf) / σ |
 | **Probability of Profit** | Chance of positive return | P(return > 0) |
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```
 stock-market-analytics-dashboard/
@@ -124,7 +115,7 @@ stock-market-analytics-dashboard/
 └── README.md              # This file
 ```
 
-## 🔬 Performance Metrics
+##  Performance Metrics
 
 ### Simulation Performance
 - **10,000 paths**: ~3-5 seconds
@@ -136,7 +127,7 @@ stock-market-analytics-dashboard/
 - **Backtested on**: 117 earnings events (AAPL, AMZN, JPM, MSFT, NVDA)
 - **Validation period**: 2017–2025 (events with 250+ training days available)
 
-## 🛠️ Configuration
+##  Configuration
 
 ### Adjust Simulation Parameters
 
@@ -158,7 +149,7 @@ model = GARCHVolatilityModel(
 )
 ```
 
-## 📈 Usage Examples
+##  Usage Examples
 
 ### Basic Simulation
 ```python
@@ -185,7 +176,7 @@ print(f"VaR (95%): {metrics['var_95']:.2f}%")
 print(f"Expected Return: {metrics['expected_return']:.2f}%")
 ```
 
-## 🧪 Testing
+##  Testing
 
 Run the test suite:
 ```bash
@@ -207,7 +198,7 @@ python tests/benchmark.py
 | `/api/simulate` | POST | Run simulation (JSON) |
 | `/api/metrics` | GET | Get current metrics |
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please follow these steps:
 
@@ -217,7 +208,7 @@ Contributions are welcome! Please follow these steps:
 4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Open Pull Request
 
-## 📊 Future Enhancements
+##  Future Enhancements
 
 - [ ] Options pricing with Black-Scholes
 - [ ] Portfolio optimization
@@ -226,23 +217,17 @@ Contributions are welcome! Please follow these steps:
 - [ ] Multi-asset correlation analysis
 - [ ] Backtesting framework expansion
 
-## 📜 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - **Yahoo Finance** for historical data
 - **Plotly Dash** for visualization framework
 - **ARCH** library for GARCH modeling
 - **NumPy/Pandas** for numerical computing
 
-## 📧 Contact
+##  Contact
 
-Your Name - [your.email@example.com](mailto:your.email@example.com)
-
-Project Link: [https://github.com/yourusername/stock-market-analytics-dashboard](https://github.com/yourusername/stock-market-analytics-dashboard)
-
----
-
-**⭐ If you find this project useful, please consider giving it a star!**
+Aarnav Gandhi - aarnavgandhi04@gmail.com
