@@ -9,8 +9,8 @@ A sophisticated financial analytics dashboard that leverages **Monte Carlo simul
 
 - **🎲 10,000 Monte Carlo Simulations** - Geometric Brownian Motion with stochastic volatility
 - **📊 GARCH(1,1) Volatility Modeling** - Captures volatility clustering and mean reversion
-- **📅 Event-Driven Analysis** - GARCH(1,1) post-earnings volatility backtest across 69 events (5 tickers, 5y)
-- **💾 6,280+ Historical Data Points** - 5 years of price history with SQLite storage (expandable to full S&P 500)
+- **📅 Event-Driven Analysis** - GARCH(1,1) post-earnings volatility backtest across 117 events (5 tickers, 10y)
+- **💾 12,575+ Historical Data Points** - 10 years of price history with SQLite storage (expandable to full S&P 500)
 - **📈 Advanced Risk Metrics** - VaR, CVaR, Sharpe Ratio, probability distributions
 - **🎨 Interactive Visualizations** - Real-time Plotly Dash interface with dark theme
 
@@ -132,9 +132,9 @@ stock-market-analytics-dashboard/
 - **Database queries**: <100ms
 
 ### Model Accuracy
-- **Post-earnings volatility**: 44.9% in-band rate (GARCH(1,1), tol=1.5×, 5-day horizon)
-- **Backtested on**: 69 earnings events (AAPL, AMZN, JPM, MSFT, NVDA)
-- **Validation period**: 2022–2025 (events with 250+ training days available)
+- **Post-earnings volatility**: 47.9% in-band rate (GARCH(1,1), tol=1.5×, 5-day horizon)
+- **Backtested on**: 117 earnings events (AAPL, AMZN, JPM, MSFT, NVDA)
+- **Validation period**: 2017–2025 (events with 250+ training days available)
 
 ## 🛠️ Configuration
 
