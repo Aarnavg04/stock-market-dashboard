@@ -10,7 +10,7 @@ A sophisticated financial analytics dashboard that leverages **Monte Carlo simul
 - **🎲 10,000 Monte Carlo Simulations** - Geometric Brownian Motion with stochastic volatility
 - **📊 GARCH(1,1) Volatility Modeling** - Captures volatility clustering and mean reversion
 - **📅 Event-Driven Analysis** - GARCH(1,1) post-earnings volatility backtest across 117 events (5 tickers, 10y)
-- **💾 12,575+ Historical Data Points** - 10 years of price history with SQLite storage (expandable to full S&P 500)
+- **💾 1.2M+ Historical Data Points** - 10 years of price history across all 503 S&P 500 tickers in SQLite
 - **📈 Advanced Risk Metrics** - VaR, CVaR, Sharpe Ratio, probability distributions
 - **🎨 Interactive Visualizations** - Real-time Plotly Dash interface with dark theme
 
@@ -111,7 +111,7 @@ stock-market-analytics-dashboard/
 │   └── backtest.py          # Backtesting framework
 │
 ├── data/                    # Data storage
-│   └── stock_data.db       # SQLite database (accumulates with each fetch run)
+│   └── stock_data.db       # SQLite database (1.2M+ rows, full S&P 500 × 10y)
 │
 ├── tests/                   # Unit tests
 │   └── test_simulation.py

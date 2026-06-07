@@ -160,8 +160,12 @@ class StockDataFetcher:
         dashboard still runs offline.
         """
         try:
+            import requests, io
             url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-            tables = pd.read_html(url)
+            headers = {"User-Agent": "Mozilla/5.0 (compatible; research-bot/1.0)"}
+            resp = requests.get(url, headers=headers, timeout=15)
+            resp.raise_for_status()
+            tables = pd.read_html(io.StringIO(resp.text))
             tickers = tables[0]["Symbol"].astype(str).str.replace(".", "-", regex=False).tolist()
             logger.info(f"Loaded {len(tickers)} S&P 500 tickers from Wikipedia")
             return tickers
