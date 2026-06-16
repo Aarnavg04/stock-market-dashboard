@@ -27,7 +27,7 @@ A sophisticated financial analytics dashboard that leverages **Monte Carlo simul
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/stock-market-analytics-dashboard.git
+git clone https://github.com/Aarnavg04/stock-market-analytics-dashboard.git
 cd stock-market-analytics-dashboard
 ```
 
