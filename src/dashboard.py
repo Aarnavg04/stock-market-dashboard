@@ -19,6 +19,24 @@ from src.risk_metrics import RiskAnalyzer
 from src.garch_model import GARCHVolatilityModel
 from src.backtest import EarningsVolatilityBacktest
 
+logger = logging.getLogger(__name__)
+
+
+def _naive_day(ts) -> pd.Timestamp:
+    """Timestamp -> tz-naive midnight of the same local calendar day."""
+    ts = pd.Timestamp(ts)
+    if ts.tzinfo is not None:
+        ts = ts.tz_localize(None)
+    return ts.normalize()
+
+
+def next_event_date(earnings_dates, after):
+    """Earliest earnings date strictly after `after` (tz-safe), or None if there is none."""
+    after = _naive_day(after)
+    upcoming = [_naive_day(d) for d in earnings_dates if _naive_day(d) > after]
+    return min(upcoming) if upcoming else None
+
+
 # Initialize components with enhanced settings
 data_fetcher = StockDataFetcher()
 simulator = MonteCarloSimulator(n_simulations=10000)  # Increased to 10,000 simulations
@@ -175,14 +193,6 @@ app.layout = dbc.Container([
                        color="primary", 
                        className="w-100 mt-3 btn-glow",
                        size="lg"),
-                    
-                    # Auto-update toggle
-                    dbc.Switch(
-                        id='auto-update',
-                        label="Auto-update Daily",
-                        value=False,
-                        className="mt-3"
-                    ),
                 ])
             ], className="mb-3"),
             
@@ -314,23 +324,28 @@ def run_simulation(n_clicks, ticker, horizon, n_sims, analyze_earnings):
     garch = GARCHVolatilityModel()
     garch_params = garch.fit(prices['Close'])
     
-    # Check for earnings events if enabled
-    earnings_dates = []
+    # Simulations start from the last close, so count days to the event from that date
+    last_close_date = _naive_day(prices.index[-1])
+
+    # Check for an upcoming earnings event if enabled
+    event_date = None
     if analyze_earnings:
-        earnings_dates = data_fetcher.fetch_earnings_dates(ticker)
-    
+        event_date = next_event_date(data_fetcher.fetch_earnings_dates(ticker), last_close_date)
+
     # Run simulation
-    if earnings_dates and analyze_earnings:
+    days_to_event = None
+    if event_date is not None:
         # Simulate around earnings with volatility adjustment
-        current_date = pd.Timestamp.now()
-        event_date = earnings_dates[0] if earnings_dates else current_date + timedelta(days=30)
-        paths, days_to_event = simulator.simulate_around_event(
-            prices['Close'], event_date, current_date, vol_multiplier=1.5
-        )
-    else:
-        # Standard simulation
+        try:
+            paths, days_to_event = simulator.simulate_around_event(
+                prices['Close'], event_date, last_close_date, vol_multiplier=1.5
+            )
+        except ValueError as e:
+            logger.warning(f"Event simulation skipped: {e}")
+    if days_to_event is None:
+        # Standard simulation (no upcoming earnings date, or event mode off)
         paths = simulator.simulate_gbm_garch(prices['Close'], horizon, garch_params)
-        days_to_event = None
+    horizon = paths.shape[1]  # event runs cover days_to_event + 5 post-event days
     
     # Calculate comprehensive metrics
     metrics = risk_analyzer.calculate_metrics(paths, prices['Close'].iloc[-1])
@@ -486,7 +501,8 @@ def update_main_graphs(results):
                       annotation_text=f"Historical: {results['historical_vol']:.1f}%")
     
     # Add GARCH forecast
-    garch_vol = np.sqrt(results['garch_params']['long_run_variance']) * np.sqrt(252) * 100
+    # long_run_variance is a daily variance of percent returns -> annualized vol in %
+    garch_vol = np.sqrt(results['garch_params']['long_run_variance']) * np.sqrt(252)
     fig_cone.add_hline(y=garch_vol, 
                       line_dash="dot", line_color="magenta",
                       annotation_text=f"GARCH LR: {garch_vol:.1f}%")
@@ -612,9 +628,14 @@ def update_bottom_panels(ticker):
     try:
         earnings_dates = data_fetcher.fetch_earnings_dates(ticker)
         if earnings_dates:
+            upcoming = next_event_date(earnings_dates, pd.Timestamp.now())
+            if upcoming is not None:
+                headline = f"Next Earnings: {upcoming.strftime('%Y-%m-%d')}"
+            else:
+                latest = max(_naive_day(d) for d in earnings_dates)
+                headline = f"No upcoming date listed (latest: {latest.strftime('%Y-%m-%d')})"
             event_display = html.Div([
-                html.P([html.I(className="fas fa-bell me-2"),
-                       f"Next Earnings: {pd.to_datetime(earnings_dates[-1]).strftime('%Y-%m-%d')}"],
+                html.P([html.I(className="fas fa-bell me-2"), headline],
                       className="mb-2", style={'color': 'yellow'}),
                 html.P(f"{len(earnings_dates)} earnings dates on record for {ticker}",
                        className="mb-2", style={'fontSize': '12px'}),
@@ -632,10 +653,9 @@ def update_bottom_panels(ticker):
         db_detail = "not initialized"
 
     pipeline_status = html.Div([
-        create_status_indicator("Data Fetch", "success", "loaded from SQLite"),
-        create_status_indicator("GARCH Model", "success", "Converged"),
+        create_status_indicator("Simulation Data", "success", "Yahoo Finance (5y) on each run"),
+        create_status_indicator("Backtest Data", "success", "SQLite price history"),
         create_status_indicator("Database", "success", db_detail),
-        create_status_indicator("Auto-Update", "warning", "Manual mode"),
         html.Hr(style={'borderColor': 'rgba(255,255,255,0.1)'}),
         html.Small(f"Last Update: {datetime.now().strftime('%Y-%m-%d %H:%M')}", 
                   className="text-muted")

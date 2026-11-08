@@ -50,10 +50,13 @@ class RiskAnalyzer:
             metrics[f'var_{int(conf*100)}'] = var
             metrics[f'cvar_{int(conf*100)}'] = cvar
         
-        # Sharpe ratio (assuming risk-free rate of 5% annually)
-        risk_free_daily = 0.05 / 252
-        sharpe = (np.mean(returns) - risk_free_daily) / np.std(returns) if np.std(returns) > 0 else 0
-        metrics['sharpe_ratio'] = sharpe * np.sqrt(252)  # Annualized
+        # Annualized Sharpe ratio (5% annual risk-free rate). `returns` span the whole
+        # horizon of T trading days, so the risk-free rate and annualization scale with T.
+        horizon_days = simulated_paths.shape[1]
+        risk_free_horizon = 0.05 * horizon_days / 252
+        std = np.std(returns)
+        sharpe = (np.mean(returns) - risk_free_horizon) / std if std > 0 else 0
+        metrics['sharpe_ratio'] = sharpe * np.sqrt(252 / horizon_days)
         
         return metrics
     
