@@ -6,7 +6,7 @@ import time
 
 
 def initialize_sp500_data():
-    """Fetch and store 5 years of S&P 500 data (accumulating across tickers)."""
+    """Fetch and store 10 years of S&P 500 data (accumulating across tickers)."""
     fetcher = StockDataFetcher()
 
     tickers = fetcher.get_sp500_tickers()
@@ -15,7 +15,7 @@ def initialize_sp500_data():
     for i, ticker in enumerate(tickers, 1):
         try:
             print(f"[{i}/{len(tickers)}] Fetching {ticker}...", end="")
-            data = fetcher.fetch_historical_data(ticker, period="5y")
+            data = fetcher.fetch_historical_data(ticker, period="10y")
             print(f" OK {len(data)} records")
             # Also persist earnings dates so the backtest has events to test
             fetcher.fetch_earnings_dates(ticker)
